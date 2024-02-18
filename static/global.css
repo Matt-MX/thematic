@@ -50,6 +50,15 @@ p {
   filter: none;
 }
 
+input, label {
+  display: block;
+}
+
+label[aria-required="true"]:after {
+  color: red;
+  content: " *";
+}
+
 code {
   font-family: courier, monospace;
   background-color: var(--background);
@@ -98,4 +107,38 @@ span.dot {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--title);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.form-elem-fill {
+  flex: 1;
+  width: 100%;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.special {
+  padding: 0.5rem 2rem;
+  border-color: var(--title);
+  color: var(--title);
+}
+
+@media only screen and (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
 }

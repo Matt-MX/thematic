@@ -21,7 +21,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"better-sqlite3": "^9.4.1",
 		"crypto": "^1.0.1",
-		"sqlite3": "^5.1.7"
+		"svelte-select": "^5.8.3"
 	}
 }

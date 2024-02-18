@@ -31,7 +31,7 @@
         </p>
 
       </div>
-      <button class="get-started" on:click={goToCreateTournament}>Get started</button>
+      <button class="special" on:click={goToCreateTournament}>Get started</button>
 
     </div>
     <div class="img-container">
@@ -51,6 +51,10 @@
     gap: 2rem;
   }
 
+  button.special {
+    width: fit-content;
+  }
+
   .section > div {
     display: flex;
     flex-direction: column;
@@ -61,13 +65,6 @@
 
   .section > div > div {
     flex: 0;
-  }
-
-  button.get-started {
-    width: fit-content;
-    padding: 0.5rem 2rem;
-    border-color: var(--title);
-    color: var(--title);
   }
 
   div.img-container {
