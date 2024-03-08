@@ -1,16 +1,16 @@
-import Database from "better-sqlite3";
-import { pbkdf2Sync } from "node:crypto";
-export const db = Database("./data.db");
+import sqlite from "sqlite3";
+import argon2 from "argon2";
+import Joi from "joi";
+export const db = new sqlite.Database("./data.db");
 
 export function createTables() {
-  db.exec(
+  db.run(
     `
     CREATE TABLE IF NOT EXISTS accounts
     (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       username TEXT,
       password TEXT,
-      salt TEXT,
       token TEXT,
       CONSTRAINT username_unique UNIQUE(username)
     );
@@ -20,6 +20,8 @@ export function createTables() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       owner_id INTEGER,
       title TEXT,
+      game TEXT,
+      desc TEXT,
       type TEXT,
       date_start DATE,
       FOREIGN KEY(owner_id) REFERENCES accounts(owner_id)
@@ -36,49 +38,108 @@ export function createTables() {
     (
       tournament_id INTEGER,
       account_id INTEGER,
+      status TEXT,
       date DATE,
       PRIMARY KEY(tournament_id, account_id),
       FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
       FOREIGN KEY(account_id) REFERENCES accounts(id)
     );
-    `
+    `,
+    (err) => {
+      if (err) {
+        console.error(err)
+      } else {
+        console.log("Database initialized");
+      }
+    }
   );
 }
 
-export const getAccountIDFromToken = (token: number) =>
+export const getAccountIDFromToken = (token: string | null) =>
   new Promise<string | undefined>((resolve, reject) => {
     if (!token) resolve(undefined);
 
-    const statement = db.prepare(
+    db.get(
       `
       SELECT id
       FROM accounts
       WHERE token = ?
+      `,
+      [token],
+      (err, result) => {
+        if (!err && result) {
+          resolve(result.id);
+        } else resolve(undefined);
+      }
+    );
+  });
+
+  export const getAccountByUsername = (username: string) => 
+  new Promise<any>((resolve, reject) => {
+    db.get(
       `
-    ).bind(token);
+      SELECT * 
+      FROM accounts
+      WHERE username = ?
+      `,
+      [username],
+      (err, result) => {
+        resolve(result)
+      }
+    )
+  })
 
-    const result = statement.get();
+  export const getAccountById = (id: number) => 
+  new Promise<any>((resolve, reject) => {
+    db.get(
+      `
+      SELECT * 
+      FROM accounts
+      WHERE id = ?
+      `,
+      [id],
+      (err, result) => {
+        resolve(result)
+      }
+    )
+  })
 
-    if (result) {
-      resolve(result.id);
-    } else resolve(undefined);
+export const accountExists = (id: number) =>
+  new Promise<any>((resolve, reject) => {
+    db.get(
+      `
+      SELECT id
+      FROM accounts
+      WHERE id = ?
+      `,
+      [id],
+      (err, result) => {
+        if (err) resolve(false)
+        else if (result) resolve(result)
+      }
+    )
   });
 
 export const getTokenFromAccountID = (id: number) =>
-  new Promise<string | undefined>((resolve, reject) => {
-    const statement = db.prepare(
+  new Promise<string | undefined>(async (resolve, reject) => {
+    if (!await accountExists(id)) {
+      return resolve(undefined)
+    }
+
+    db.get(
       `
       SELECT token
       FROM accounts
       WHERE id = ?
-      `
-    ).bind(id);
-
-    const result = statement.get();
-
-    if (!result.token) {
-      setToken(id).then(resolve).catch(reject);
-    } else resolve(result.token);
+      `,
+      [id],
+      (err, result) => {
+        if (err) reject(err)
+        else if (!result?.token) {
+          setToken(id).then(resolve).catch(reject);
+        } else resolve(result.token);
+      }
+    );
   });
 
 export function setToken(id: number): Promise<string | undefined> {
@@ -91,21 +152,19 @@ export function setTokenProvided(
   token: string | undefined
 ): Promise<string | undefined> {
   return new Promise<string | undefined>((resolve, reject) => {
-    const statement = db.prepare(
+    db.run(
       `
       UPDATE accounts
-      SET token = $token
-      WHERE id = $id
-      `
+      SET token = ?
+      WHERE id = ?
+      `,
+      [token, id],
+      (err) => {
+        if (err) {
+          reject(err)
+        } else resolve(token)
+      }
     );
-
-    const result = statement.run({
-      token, id
-    });
-
-    if (result) {
-      resolve(token)
-    } else reject(result)
   });
 }
 
@@ -116,11 +175,43 @@ export interface AccountCreation {
   password: string;
 }
 
+const accountCreationSchema = Joi.object({
+  username: Joi.string()
+    .alphanum()
+    .min(3)
+    .max(16)
+    .required(),
+  password: Joi.string()
+    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+})
+
 export const createNewAccount = (creation: AccountCreation) =>
-  new Promise((resolve, reject) => {
-    const salt = crypto.randomBytes(64);
-    const hash = getHash(creation.password, salt);
+  new Promise<number>(async (resolve, reject) => {
+    
+    const validation = accountCreationSchema.validate(creation)
+    if (validation.error) {
+      return reject(validation.error)
+    }
+
+    const hash = await getHash(creation.password);
+
+    db.run(
+      `
+      INSERT INTO accounts
+      (username, password)
+      VALUES(
+        ?, ?
+      )
+      `,
+      [creation.username, hash],
+      function(err) {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(this.lastID)
+        }
+      }
+    )
   });
 
-const getHash = (password: string, salt: string) =>
-  pbkdf2Sync(password, salt, 100000, 256, "sha256").toString("hex");
+export const getHash = async (password: string) => await argon2.hash(password)

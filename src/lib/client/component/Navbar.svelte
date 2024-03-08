@@ -3,7 +3,7 @@
 </script>
 
 <div class="topbar">
-  <h1 class="title">TBC</h1>
+  <a class="title" href="/"><h1>TBC</h1></a>
   <div class="gap"></div>
   <a href="/">Home</a>
   <span class="dot"></span>
@@ -11,6 +11,7 @@
   <span class="dot"></span>
 
   {#if isLoggedIn()}
+    <!-- <a href="/account/tournaments">Your Tournaments</a> -->
     <a href="/account">Account</a>
   {:else}
     <a href="/login">Login</a>
@@ -28,26 +29,22 @@
     background-color: var(--background);
   }
 
-  .topbar .title {
-    color: var(--title);
-  }
-
   .topbar .gap {
     flex: 1;
   }
 
-  .topbar a {
+  .topbar a:not(.title) {
     padding: 0.3rem 1.5rem;
   }
 
-  .topbar a:hover {
+  .topbar a:not(.title):hover {
     padding: 0.5rem 1.5rem;
     border-bottom: 2px solid var(--text);
 
     transition: all 0.1s ease-in-out;
   }
 
-  .topbar a.active {
+  .topbar a:not(.title).active {
     color: var(--title);
   }
 </style>

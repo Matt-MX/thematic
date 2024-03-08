@@ -4,10 +4,12 @@
 </script>
 <Navbar></Navbar>
 
-<div class="page">
-  <h1>404</h1>
-  <p>Page not found</p>
-</div>
+<a href="/">
+  <div class="page">
+    <h1>404</h1>
+    <p>Page not found</p>
+  </div>
+</a>
 
 <style>
   .page {

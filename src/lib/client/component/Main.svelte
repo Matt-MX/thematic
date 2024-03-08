@@ -9,17 +9,17 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    top: 0;
 
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
+    z-index: -1;
   }
 
   .main {
     position: relative;
     width: calc(min(99%, 75em));
-    height: calc(min(100%, 40em));
+    height: min(99%, fit-content);
     
     display: flex;
     flex-direction: column;
