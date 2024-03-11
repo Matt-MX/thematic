@@ -5,3 +5,7 @@ export function isLoggedIn() {
 export function getCachedToken() {
   return typeof localStorage !== "undefined" ? localStorage.getItem('token') : undefined;
 }
+
+export function getCachedAccountId() {
+  return typeof localStorage !== "undefined" ? localStorage.getItem('account_id') : undefined;
+}

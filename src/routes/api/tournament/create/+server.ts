@@ -1,6 +1,7 @@
 import { db, getAccountIDFromToken } from "$lib/server/db";
 import Joi from "joi";
 import type { RequestEvent } from "./$types";
+import type Account from "$lib/schema/Account";
 
 const tournamentCreationSchema = Joi.object({
   t_name: Joi.string()
@@ -8,19 +9,24 @@ const tournamentCreationSchema = Joi.object({
     .max(32)
     .required(),
   t_game: Joi.string()
+    .optional()  
     .max(32),
   t_desc: Joi.string()
+    .optional()
     .max(512),
   t_date: Joi.date()
     .required(),
-  t_time: Joi.string(),
-  t_type: Joi.string().valid("single_elim", "double_elim").required()
+  t_time: Joi.string()
+    .optional(),
+  t_type: Joi.string()
+    .valid("single_elim", "double_elim")
+    .required()
 })
 
 export async function POST(req: RequestEvent) {
-  const account = await getAccountIDFromToken(req.request.headers.get('X-Authorization'))
+  const accountId = await getAccountIDFromToken(req.request.headers.get('X-Authorization'))
 
-  if (!account) {
+  if (!accountId) {
     return new Response(null, {
       status: 400
     });
@@ -39,6 +45,7 @@ export async function POST(req: RequestEvent) {
     })
   }
 
+  // todo need to use a promise callback here
   db.run(
     `
     INSERT INTO tournaments
@@ -46,7 +53,7 @@ export async function POST(req: RequestEvent) {
     VALUES(?, ?, ?, ?, ?, datetime(?))
     `,
     [
-      account.id,
+      accountId,
       body.t_name,
       body.t_game,
       body.t_desc,

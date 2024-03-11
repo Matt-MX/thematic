@@ -1,6 +1,7 @@
 import sqlite from "sqlite3";
 import argon2 from "argon2";
 import Joi from "joi";
+import type Account from "$lib/schema/Account";
 export const db = new sqlite.Database("./data.db");
 
 export function createTables() {
@@ -56,7 +57,7 @@ export function createTables() {
 }
 
 export const getAccountIDFromToken = (token: string | null) =>
-  new Promise<string | undefined>((resolve, reject) => {
+  new Promise<number | undefined>((resolve, reject) => {
     if (!token) resolve(undefined);
 
     db.get(
@@ -68,14 +69,14 @@ export const getAccountIDFromToken = (token: string | null) =>
       [token],
       (err, result) => {
         if (!err && result) {
-          resolve(result.id);
+          resolve((result as Account).id);
         } else resolve(undefined);
       }
     );
   });
 
   export const getAccountByUsername = (username: string) => 
-  new Promise<any>((resolve, reject) => {
+  new Promise<Account | undefined>((resolve, reject) => {
     db.get(
       `
       SELECT * 
@@ -84,13 +85,17 @@ export const getAccountIDFromToken = (token: string | null) =>
       `,
       [username],
       (err, result) => {
-        resolve(result)
+        if (result) {
+          resolve(result as Account)
+        } else {
+          resolve(undefined)
+        }
       }
     )
   })
 
   export const getAccountById = (id: number) => 
-  new Promise<any>((resolve, reject) => {
+  new Promise<Account | undefined>((resolve, reject) => {
     db.get(
       `
       SELECT * 
@@ -99,13 +104,17 @@ export const getAccountIDFromToken = (token: string | null) =>
       `,
       [id],
       (err, result) => {
-        resolve(result)
+        if (result) {
+          resolve(result as Account)
+        } else {
+          reject(undefined)
+        }
       }
     )
   })
 
 export const accountExists = (id: number) =>
-  new Promise<any>((resolve, reject) => {
+  new Promise<boolean>((resolve, reject) => {
     db.get(
       `
       SELECT id
@@ -114,8 +123,8 @@ export const accountExists = (id: number) =>
       `,
       [id],
       (err, result) => {
-        if (err) resolve(false)
-        else if (result) resolve(result)
+        if (err || !result) resolve(false)
+        else if (result) resolve(true)
       }
     )
   });
@@ -134,10 +143,12 @@ export const getTokenFromAccountID = (id: number) =>
       `,
       [id],
       (err, result) => {
-        if (err) reject(err)
-        else if (!result?.token) {
+        if (err || !result) return reject(err)
+        
+        const account = result as Account
+        if (account.token) {
           setToken(id).then(resolve).catch(reject);
-        } else resolve(result.token);
+        } else resolve(account.token);
       }
     );
   });
