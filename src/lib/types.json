@@ -1,0 +1,8 @@
+{
+    "single_elim": {
+        "label": "Single Elimination"
+    },
+    "double_elim": {
+        "label": "Double Elimination"
+    }
+}

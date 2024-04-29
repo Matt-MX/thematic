@@ -2,11 +2,12 @@ import sqlite from "sqlite3";
 import argon2 from "argon2";
 import Joi from "joi";
 import type Account from "$lib/schema/Account";
+import type TournamentInformation from "$lib/schema/TournamentInformation";
 export const db = new sqlite.Database("./data.db");
 
 export function createTables() {
-  db.run(
-    `
+
+  const tables = [`
     CREATE TABLE IF NOT EXISTS accounts
     (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,9 +15,9 @@ export function createTables() {
       password TEXT,
       token TEXT,
       CONSTRAINT username_unique UNIQUE(username)
-    );
-    
-    CREATE TABLE IF NOT EXISTS tournaments
+    );`,
+
+    `CREATE TABLE IF NOT EXISTS tournaments
     (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       owner_id INTEGER,
@@ -26,16 +27,16 @@ export function createTables() {
       type TEXT,
       date_start DATE,
       FOREIGN KEY(owner_id) REFERENCES accounts(owner_id)
-    );
+    );`,
 
-    CREATE TABLE IF NOT EXISTS teams
+    `CREATE TABLE IF NOT EXISTS teams
     (
       name TEXT,
       tournament_id INTEGER,
       FOREIGN KEY(tournament_id) REFERENCES tournaments(id)
-    );
+    );`,
 
-    CREATE TABLE IF NOT EXISTS helpers
+    `CREATE TABLE IF NOT EXISTS helpers
     (
       tournament_id INTEGER,
       account_id INTEGER,
@@ -44,16 +45,21 @@ export function createTables() {
       PRIMARY KEY(tournament_id, account_id),
       FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
       FOREIGN KEY(account_id) REFERENCES accounts(id)
-    );
-    `,
-    (err) => {
-      if (err) {
-        console.error(err)
-      } else {
-        console.log("Database initialized");
+    );`
+  ]
+
+  for (const statement of tables) {
+    db.run(
+      statement,
+      (err) => {
+        if (err) {
+          console.error(err)
+        } else {
+          console.log("Database initialized");
+        }
       }
-    }
-  );
+    );
+  }
 }
 
 export const getAccountIDFromToken = (token: string | null) =>
@@ -75,7 +81,7 @@ export const getAccountIDFromToken = (token: string | null) =>
     );
   });
 
-  export const getAccountByUsername = (username: string) => 
+export const getAccountByUsername = (username: string) =>
   new Promise<Account | undefined>((resolve, reject) => {
     db.get(
       `
@@ -94,7 +100,7 @@ export const getAccountIDFromToken = (token: string | null) =>
     )
   })
 
-  export const getAccountById = (id: number) => 
+export const getAccountById = (id: number) =>
   new Promise<Account | undefined>((resolve, reject) => {
     db.get(
       `
@@ -107,8 +113,27 @@ export const getAccountIDFromToken = (token: string | null) =>
         if (result) {
           resolve(result as Account)
         } else {
-          reject(undefined)
+          resolve(undefined)
         }
+      }
+    )
+  })
+
+export const getTournamentsByAccount = (id: number) =>
+  new Promise<TournamentInformation[]>((resolve, reject) => {
+    // todo include "helpers"
+    db.all(
+      `
+      SELECT *
+      FROM tournaments
+      WHERE owner_id = ?
+      ORDER BY date_start ASC
+      `,
+      [id],
+      (err, results) => {
+        if (results) {
+          resolve(results.map((result) => result as TournamentInformation))
+        } else resolve(results)
       }
     )
   })
@@ -144,7 +169,7 @@ export const getTokenFromAccountID = (id: number) =>
       [id],
       (err, result) => {
         if (err || !result) return reject(err)
-        
+
         const account = result as Account
         if (account.token) {
           setToken(id).then(resolve).catch(reject);
@@ -198,7 +223,7 @@ const accountCreationSchema = Joi.object({
 
 export const createNewAccount = (creation: AccountCreation) =>
   new Promise<number>(async (resolve, reject) => {
-    
+
     const validation = accountCreationSchema.validate(creation)
     if (validation.error) {
       return reject(validation.error)
@@ -215,7 +240,7 @@ export const createNewAccount = (creation: AccountCreation) =>
       )
       `,
       [creation.username, hash],
-      function(err) {
+      function (err) {
         if (err) {
           reject(err)
         } else {

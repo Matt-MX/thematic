@@ -32,13 +32,14 @@
     {placeholder}
     maxlength={255}
 />
-<p>{maxLengthText}</p>
+<p class="max-length">{maxLengthText}</p>
 
 <style>
-    p {
-        margin-top: -1.5rem;
+    .max-length {
+        position: absolute;
+        margin-top: -2rem;
         margin-left: 0.5rem;
-        color: var(--background-alt);
+        color: var(--dull);
         font-size: smaller;
     }
 </style>

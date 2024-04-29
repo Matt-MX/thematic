@@ -1,18 +1,18 @@
 <script>
-  import { isLoggedIn } from "../services/account";
+  import { isLoggedIn, getCachedAccountId } from "../services/account";
 </script>
 
 <div class="topbar">
   <a class="title" href="/"><h1>TBC</h1></a>
   <div class="gap"></div>
-  <a href="/">Home</a>
+  <a href="/browse">Browse</a>
   <span class="dot"></span>
   <a href="/search">Search</a>
   <span class="dot"></span>
 
   {#if isLoggedIn()}
     <!-- <a href="/account/tournaments">Your Tournaments</a> -->
-    <a href="/account">Account</a>
+    <a href="/account/{getCachedAccountId()}">Account</a>
   {:else}
     <a href="/login">Login</a>
   {/if}
@@ -26,7 +26,7 @@
     gap: 1rem;
     padding: 1rem 2rem;
     box-sizing: border-box;
-    background-color: var(--background);
+    /* background-color: var(--background); */
   }
 
   .topbar .gap {
@@ -46,5 +46,9 @@
 
   .topbar a:not(.title).active {
     color: var(--title);
+  }
+
+  a {
+    text-decoration: none;
   }
 </style>

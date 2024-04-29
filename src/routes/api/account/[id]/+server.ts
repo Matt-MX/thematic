@@ -1,19 +1,26 @@
-import { getAccountById } from "$lib/server/db";
+import { getAccountById, getTournamentsByAccount } from "$lib/server/db";
 import type { RequestEvent } from "./$types";
 
 export async function GET(req: RequestEvent) {
   const id = parseInt(req.params.id);
 
+  if (!id) {
+    return new Response(null, { status: 400 })
+  }
   const account = id ? await getAccountById(id) : undefined;
 
   if (account) {
     account.token = undefined;
     account.password = undefined;
+  } else {
+    return new Response(null, { status: 404 })
   }
 
-  const res = account ? account : { error: "Account not found" }
+  const tournaments = await getTournamentsByAccount(id)
 
-  return new Response(JSON.stringify(res), {
+  account.tournaments = tournaments
+
+  return new Response(JSON.stringify(account), {
     headers: {
       "Content-Type": "application/json",
     },

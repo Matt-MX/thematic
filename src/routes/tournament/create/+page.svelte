@@ -5,46 +5,42 @@
   import { goto } from "$app/navigation";
   import Textarea from "$lib/client/component/Textarea.svelte";
   import InputBox from "$lib/client/component/InputBox.svelte";
-    import { getCachedToken } from "$lib/client/services/account";
+  import { getCachedToken } from "$lib/client/services/account";
+  import types from "$lib/types.json";
+  import games from "$lib/games.json";
 
-  const items = [
-    { value: "single_elim", label: "Single Elimination" },
-    { value: "double_elim", label: "Double Elimination" },
-  ];
+  const tournamentTypes = Object.entries(types).map((i) => {
+    return { value: i[0], label: i[1].label };
+  });
 
-  const games = [
-    { value: "cs2", label: "CS2" },
-    { value: "rs6", label: "Rainbox Six Seige" },
-    { value: "mc", label: "Minecraft" },
-  ];
+  const gameTypes = Object.entries(games).map((i) => {
+    return { value: i[0], label: i[1].name }
+  })
 
-  let justValue = "";
   let body = {
-    t_name: "",
-    t_game: "",
-    t_desc: "",
-    t_date: "",
-    t_time: "",
+    name: "",
+    game: "",
+    desc: "",
+    date_start: "",
+    date_end: undefined,
+    type: "",
   };
 
+  // todo handle errors
   const submit = () => {
-    fetch(`/api/tournament/create`, {
+    fetch(`/tournament/create`, {
       method: "POST",
-      body: JSON.stringify({
-        ...body,
-        t_type: justValue,
-      }),
+      body: JSON.stringify(body),
       headers: {
-        'X-Authorization': getCachedToken() || "null"
-      }
+        "X-Authorization": getCachedToken() || "null",
+      },
     })
       .then((data) => data.json())
       .then((json) => {
-        if (!json.error) {
+        if (json.error) {
           console.error(json.error);
           return;
         }
-        console.log(json);
         goto(`/tournament/${json}`);
       });
   };
@@ -55,25 +51,25 @@
 <Main>
   <h1>Create a tournament</h1>
 
-  <form>
+  <form on:submit={submit}>
     <div class="form-column">
       <div class="form-elem-fill">
         <InputBox
           name="Tournament Name"
           placeholder="Name"
           required={true}
-          bind:value={body.t_name}
+          bind:value={body.name}
         />
       </div>
       <div class="form-elem-fill">
         <label for="" aria-required="false">Game</label>
         <Select
-          bind:justValue={body.t_game}
-          items={games}
+          bind:justValue={body.game}
+          items={gameTypes}
           --item-color="var(--color)"
           --list-background="var(--background)"
-          --item-active-background="var(--title)"
-          --item-hover-bg="var(--title)"
+          --item-active-background="var(--background-alt)"
+          --item-hover-bg="var(--background-alt)"
           --list-border="1px solid var(--text)"
           --border-focused="1px solid var(--title)"
           --item-is-active-bg="var(--title)"
@@ -82,7 +78,7 @@
 
       <div class="form-elem-fill">
         <Textarea
-          bind:value={body.t_desc}
+          bind:value={body.desc}
           title="Tournament Description"
           placeholder="Description"
           id="t_desc"
@@ -91,24 +87,24 @@
 
       <div class="form-row">
         <div class="form-elem-fill">
-          <label for="t_date" aria-required="true">Date</label>
+          <label for="t_date" aria-required="true">Starting</label>
           <input
-            bind:value={body.t_date}
-            type="date"
+            bind:value={body.date_start}
+            type="datetime-local"
             class="box-style form-elem-fill"
             id="t_date"
             placeholder="Date"
             required
           />
         </div>
-        <div>
-          <label for="t_time">Time</label>
+        <div class="form-elem-fill">
+          <label for="t_date" aria-required="false">Ending</label>
           <input
-            bind:value={body.t_time}
-            type="time"
+            bind:value={body.date_end}
+            type="datetime-local"
             class="box-style form-elem-fill"
-            id="t_time"
-            placeholder="Time"
+            id="t_date"
+            placeholder="Date"
           />
         </div>
       </div>
@@ -119,8 +115,8 @@
         <div class="form-elem-fill">
           <label for="" aria-required="true">Type</label>
           <Select
-            bind:justValue
-            {items}
+            bind:justValue={body.type}
+            items={tournamentTypes}
             --item-color="var(--color)"
             --list-background="var(--background)"
             --item-active-background="var(--title)"
@@ -136,17 +132,14 @@
 
       <div class="form-row buttons">
         <button class="danger form-elem-fill" type="reset">Reset</button>
-        <button class="special form-elem-fill" type="submit" on:click={submit}
-          >Create</button
-        >
+        <button class="confirm form-elem-fill" type="submit">Create</button>
       </div>
     </div>
   </form>
 </Main>
 
 <style>
-  input[type="date"],
-  input[type="time"] {
+  input[type="datetime-local"] {
     color-scheme: dark;
   }
 

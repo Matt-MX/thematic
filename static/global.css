@@ -1,25 +1,33 @@
-@import url("https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 html {
   scroll-behavior: smooth;
 }
 
 :root {
-  --background: #05131a;
+  --background: #0E191F;
+  --background-alt: #346D8B;
 
   --text: #ffffff;
   --dull: #bbbbbb;
 
-  --title: #d56820;
+  --title: rgb(25, 209, 241);
+  --highlight: #1ed7e4;
+
+  --confirm: #339900;
+  --danger: #cc3300;
 }
 
 body {
-  background-color: var(--background);
+  /* background-color: var(--background); */
+  background: rgb(52, 109, 139) no-repeat;
+  background: linear-gradient(212deg, rgba(52, 109, 139, 1) 12%, rgba(33, 76, 99, 1) 29%, rgba(18, 34, 44, 1) 74%, rgba(14, 25, 31, 1) 96%);
+  /* background-repeat: no-repeat; */
   color: var(--text);
 }
 
 * {
-  font-family: 'Source Code Pro', monospace;
+  font-family: 'Poppins', monospace;
   margin: 0;
   padding: 0;
   border-width: 0px;
@@ -37,7 +45,7 @@ h1 {
 }
 
 p {
-  font-family: 'Source Code Pro', monospace;
+  font-family: 'Poppins', monospace;
 }
 
 .box-style {
@@ -55,7 +63,8 @@ p {
   filter: none;
 }
 
-input, label {
+input,
+label {
   display: block;
 }
 
@@ -141,10 +150,27 @@ label {
   gap: 1rem;
 }
 
-.special {
+button.special {
   padding: 0.5rem 2rem;
   border-color: var(--title);
   color: var(--title);
+}
+
+button.confirm {
+  padding: 0.5rem 2rem;
+  border-color: var(--confirm);
+  color: var(--confirm);
+}
+
+button.danger {
+  padding: 0.5rem 2rem;
+  border-color: var(--danger);
+  color: var(--danger)
+}
+
+a {
+  color: var(--highlight);
+  text-decoration: underline;
 }
 
 @media only screen and (max-width: 600px) {

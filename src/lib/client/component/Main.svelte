@@ -6,24 +6,26 @@
 
 <style>
   .main-container {
-    position: absolute;
+    position: relative;
     width: 100%;
-    height: 100%;
+    min-height: 100vh;
+    height: max-content;
 
     display: flex;
     justify-content: center;
     align-items: start;
-    z-index: -1;
   }
 
   .main {
     position: relative;
     width: calc(min(99%, 75em));
-    height: min(99%, fit-content);
+    height: calc(min(99%, fit-content));
     
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
   }
 
   @media only screen and (max-width: 600px) {

@@ -1,0 +1,42 @@
+{
+    "cs2": {
+        "name": "Counter Strike",
+        "bg": "https://wallpapercave.com/download/cs2-wallpapers-wp12817890",
+        "icon": "https://static.displate.com/270x380/displate/2023-06-12/6e217abc7f5bb5d0dc56e68752193a11_5c51574f5f2f216f9ef25a0d08fa6400.jpg"
+    },
+    "r6s": {
+        "name": "Rainbow Six Siege",
+        "bg": "https://i.redd.it/jc66fifgdd111.jpg",
+        "icon": "https://img1.cgtrader.com/items/2018582/0dd527fc09/large/3d-printed-rainbow-six-siege-operator-icons-3d-model-stl.jpg"
+    },
+    "mc": {
+        "name": "Minecraft",
+        "bg": "https://image8.uhdpaper.com/wallpaper-hd/minecraft-uhdpaper.com-hd-8.2239.jpg",
+        "icon": "https://cdn2.iconfinder.com/data/icons/metro-ui-icon-set/512/Minecraft.png"
+    },
+    "football_full": {
+        "name": "Football Match (90m)",
+        "bg": "",
+        "icon": "",
+        "timings": [
+            { "name": "First Half", "time": 45000 },
+            { "name": "Second Half", "time": 45000 }
+        ]
+    },
+    "ice_hockey": {
+        "name": "Ice Hockey (3 periods)",
+        "bg": "",
+        "icon": "",
+        "timings": [
+            { "name": "First Period", "time": 20000 },
+            { "name": "Second Period", "time": 20000 },
+            { "name": "Third Period", "time": 20000 },
+            { "name": "Penalties", "time": -1 }
+        ]
+    },
+    "other": {
+        "name": "Other",
+        "bg": "",
+        "icon": ""
+    }
+}

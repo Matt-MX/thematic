@@ -12,13 +12,9 @@
   };
 
   const createAccount = () => {
-    if (type == "login") {
-      type = "create";
-      return;
-    }
 
     // todo refactor to use service files
-    
+
     // todo: create account `/account/create`
     fetch(`/api/account/create`, {
       method: "POST",
@@ -51,10 +47,6 @@
   };
 
   const login = () => {
-    if (type == "create") {
-      type = "login";
-      return;
-    }
 
     // todo: login `/account/login`
     fetch(`/api/account/login`, {
@@ -80,74 +72,119 @@
 
 <Navbar />
 <Main>
-  <h1>Login</h1>
-
-  <form>
-    <div class="form-column">
-      <div class="form-elem-fill">
-        <label for="username" aria-required="true">Username</label>
-        <input
-          bind:value={formObject.username}
-          type="text"
-          class="box-style form-elem-fill"
-          id="username"
-          placeholder="Username"
-          required
-        />
-      </div>
-
-      <div class="form-elem-fill">
-        <label for="password" aria-required="true">Password</label>
-        <input
-          bind:value={formObject.password}
-          type="password"
-          class="box-style form-elem-fill"
-          id="password"
-          placeholder="Password"
-          required
-        />
-      </div>
-
+  <div class="form-container">
+    <div>
       {#if type == "create"}
-        <div class="form-elem-fill">
-          <label for="confirm-password" aria-required="true"
-            >Confirm Password</label
+        <p>Start for free</p>
+        <h1>Create Account</h1>
+        <p class="already-member">
+          Already a member? <a href="#" on:click={() => (type = "login")}
+            >Log in</a
           >
-          <input
-            bind:value={formObject.confirmPassword}
-            type="password"
-            class="box-style form-elem-fill"
-            id="confirm-password"
-            placeholder="Confirm Password"
-            required
-          />
-        </div>
+        </p>
+      {:else}
+        <h1>Login</h1>
+        <p class="already-member">
+          Don't have an account? <a href="#" on:click={() => (type = "create")}
+            >Create one</a
+          >
+        </p>
       {/if}
     </div>
 
-    <div class="form-row" style="align-items: center;">
-      <button class={type == "login" ? "special" : ""} on:click={login}
-        >Login</button
-      >
-      <p>Or</p>
-      <button class={type == "create" ? "special" : ""} on:click={createAccount}
-        >Create Account</button
-      >
-    </div>
-  </form>
+    <form class="account-form">
+      <div class="form-column">
+        <div class="form-elem-fill">
+          <label for="username" aria-required="true">Username</label>
+          <input
+            bind:value={formObject.username}
+            type="text"
+            class="box-style form-elem-fill"
+            id="username"
+            placeholder="Username"
+            required
+          />
+        </div>
+
+        <div class="form-elem-fill">
+          <label for="password" aria-required="true">Password</label>
+          <input
+            bind:value={formObject.password}
+            type="password"
+            class="box-style form-elem-fill"
+            id="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        {#if type == "create"}
+          <div class="form-elem-fill">
+            <label for="confirm-password" aria-required="true"
+              >Confirm Password</label
+            >
+            <input
+              bind:value={formObject.confirmPassword}
+              type="password"
+              class="box-style form-elem-fill"
+              id="confirm-password"
+              placeholder="Confirm Password"
+              required
+            />
+          </div>
+        {/if}
+      </div>
+
+      {#if type == "create"}
+        <button on:click={createAccount}>Create Account</button>
+      {:else}
+        <button on:click={login}>Log in</button>
+      {/if}
+    </form>
+  </div>
 </Main>
 
 <style>
+  :global(.main-container) {
+    position: absolute;
+    top: -2rem;
+    flex-direction: column;
+    padding: 3rem;
+    box-sizing: border-box;
+  }
+
+  .form-container {
+    width: auto;
+  }
+
   .form-column {
     display: flex;
     flex-direction: column;
     gap: 1rem;
   }
 
+  .account-form {
+    max-width: 30rem;
+  }
+
+  h1,
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  .already-member {
+    color: var(--dull);
+  }
+
   @media only screen and (max-width: 600px) {
     .form-row {
       flex-direction: row;
       justify-content: space-between;
+    }
+    :global(.main-container) {
+      flex-direction: row;
+      padding: 0;
     }
   }
 </style>
