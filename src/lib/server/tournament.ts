@@ -3,10 +3,12 @@ import { db } from "./db"
 export const getTournamentInfo = (id: string) =>
     new Promise<any>((resolve, reject) => {
         db.get(
-            `SELECT * FROM tournaments WHERE id = ?`,
+            `
+            SELECT * FROM tournaments WHERE id = ?
+            `,
             [id],
             (err, result) => {
-                resolve(result)
+              resolve(result)
             }
         )
     })

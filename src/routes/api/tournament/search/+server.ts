@@ -9,13 +9,20 @@ export async function GET(req: RequestEvent) {
     db.all(
       `
       SELECT * FROM tournaments
-      WHERE title LIKE ?
+      WHERE (
+        title LIKE $q
+        OR desc LIKE $q
+      )
       ORDER BY date_start ASC
       LIMIT(10)
-      OFFSET(?)
+      OFFSET($page)
       `,
-      [q + "%", p],
+      {
+        $q: "%" + q + "%", 
+        $page: p
+      },
       (err, results) => {
+        console.log(err)
         resolve(
           new Response(JSON.stringify(err ? err : results), {
             headers: {

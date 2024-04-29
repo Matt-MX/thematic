@@ -2,16 +2,13 @@
   import Main from "$lib/client/component/Main.svelte";
   import Navbar from "$lib/client/component/Navbar.svelte";
   import SearchBar from "$lib/client/component/SearchBar.svelte";
-
-  let results = [];
+  import TournamentPreview from "$lib/client/component/TournamentPreview.svelte";
 
   const search = (query: string) => {
-    fetch(`/api/tournament/search?q=${query}`)
-      .then((data) => data.json())
-      .then((json) => {
-        results = json;
-      });
+    location.href = "/search?q=" + encodeURIComponent(query);
   };
+
+  export let data: PageData;
 </script>
 
 <Navbar />
@@ -19,11 +16,11 @@
   <h1>Search</h1>
   <SearchBar {search} />
 
-  {#if results.length == 0}
-    <div class="box-style empty-result"><h2>No results</h2></div>
-  {:else}
-    {#each results as result}
-      <div class="box-style"></div>
+  <p>{data.results?.length == 0 ? "No" : data.results?.length} results</p>
+
+  {#if data && data.results?.length && data.results.length > 0}
+    {#each data.results as result}
+      <TournamentPreview info={result} />
     {/each}
   {/if}
 </Main>

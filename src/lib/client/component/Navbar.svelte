@@ -3,7 +3,7 @@
 </script>
 
 <div class="topbar">
-  <a class="title" href="/"><h1>TBC</h1></a>
+  <a class="title" href="/"><h1>Project01</h1></a>
   <div class="gap"></div>
   <a href="/browse">Browse</a>
   <span class="dot"></span>

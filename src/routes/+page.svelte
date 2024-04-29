@@ -1,7 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
+  import BackgroundImageOverlay from '$lib/client/component/BackgroundImageOverlay.svelte';
   import Navbar from "$lib/client/component/Navbar.svelte";
   import {isLoggedIn} from "$lib/client/services/account";
+  import games from "$lib/games.json"
 
   function goToCreateTournament() {
     if (isLoggedIn()) {
@@ -15,12 +17,14 @@
 
 <Navbar></Navbar>
 
+<BackgroundImageOverlay src={games["ice_hockey"].bg} />
+
 <div class="landing">
   <div class="section">
     <div>
       <div>
         
-        <h1 class="title">TBC</h1>
+        <h1 class="title">Project 01</h1>
         <p>The leading tournament organization system.</p>
 
         <br />
@@ -35,13 +39,11 @@
       <button class="special" on:click={goToCreateTournament}>Get started</button>
 
     </div>
-    <div class="img-container">
-      <img src="https://trello.com/1/cards/65c96ad183efaca9ea043d27/attachments/65cf488feadfceb8d8f72934/previews/65cf4890eadfceb8d8f7295a/download/image.png" />
-    </div>
   </div>
 </div>
 
 <style>
+
   .section {
     width: 100%;
     height: 100vh;

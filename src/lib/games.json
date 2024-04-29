@@ -1,7 +1,7 @@
 {
     "cs2": {
         "name": "Counter Strike",
-        "bg": "https://wallpapercave.com/download/cs2-wallpapers-wp12817890",
+        "bg": "https://wallpapercave.com/wp/wp12817989.png",
         "icon": "https://static.displate.com/270x380/displate/2023-06-12/6e217abc7f5bb5d0dc56e68752193a11_5c51574f5f2f216f9ef25a0d08fa6400.jpg"
     },
     "r6s": {
@@ -11,7 +11,7 @@
     },
     "mc": {
         "name": "Minecraft",
-        "bg": "https://image8.uhdpaper.com/wallpaper-hd/minecraft-uhdpaper.com-hd-8.2239.jpg",
+        "bg": "https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/02/minecraft-promo-art.jpg",
         "icon": "https://cdn2.iconfinder.com/data/icons/metro-ui-icon-set/512/Minecraft.png"
     },
     "football_full": {
@@ -25,8 +25,8 @@
     },
     "ice_hockey": {
         "name": "Ice Hockey (3 periods)",
-        "bg": "",
-        "icon": "",
+        "bg": "https://www.adorama.com/alc/wp-content/uploads/2023/04/GettyImages-72916188.jpg",
+        "icon": "https://as2.ftcdn.net/v2/jpg/01/22/38/13/1000_F_122381389_0iGPQHDoUiHw1zjFZuQwmkx1FKhGUEYK.jpg",
         "timings": [
             { "name": "First Period", "time": 20000 },
             { "name": "Second Period", "time": 20000 },
