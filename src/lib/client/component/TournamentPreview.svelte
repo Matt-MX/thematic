@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<style>
+<style scoped>
     .tournament-preview {
         background-color: var(--background);
         border: 1px solid var(--text);

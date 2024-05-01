@@ -61,7 +61,7 @@
     </div>
 </Main>
 
-<style>
+<style scoped>
     .avatar {
         width: 10rem;
     }

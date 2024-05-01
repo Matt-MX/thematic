@@ -18,7 +18,7 @@
   {/if}
 </div>
 
-<style>
+<style scoped>
   .topbar {
     position: sticky;
     display: flex;

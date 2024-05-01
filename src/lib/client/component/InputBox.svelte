@@ -22,7 +22,7 @@
     />
 </div>
 
-<style>
+<style scoped>
     .input-box {
         display: flex;
         flex-direction: column;

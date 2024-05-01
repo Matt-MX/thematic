@@ -34,6 +34,11 @@
             { "name": "Penalties", "time": -1 }
         ]
     },
+    "smash_bros_ultimate": {
+        "name": "Super Smash Bros Ultimate",
+        "bg": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/bfdb7d48-342a-4f44-8f2d-ca5203070d57/dce884p-e332a2ed-1364-494b-ae53-a27d3a71cf13.jpg/v1/fill/w_1024,h_512,q_75,strp/super_smash_bros__ultimate_wallpaper_by_cynicsonic_dce884p-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTEyIiwicGF0aCI6IlwvZlwvYmZkYjdkNDgtMzQyYS00ZjQ0LThmMmQtY2E1MjAzMDcwZDU3XC9kY2U4ODRwLWUzMzJhMmVkLTEzNjQtNDk0Yi1hZTUzLWEyN2QzYTcxY2YxMy5qcGciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.5uXyOyeSVrJAT1R4LoxRZv_yVBnREslLHzdbg7DqFl8",
+        "icon": "https://cdn2.steamgriddb.com/icon_thumb/0bb4aec1710521c12ee76289d9440817.png"
+    },
     "other": {
         "name": "Other",
         "bg": "",

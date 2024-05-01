@@ -6,7 +6,7 @@
     <img src={url} />
 </div>
 
-<style>
+<style scoped>
     .avatar-container {
         position: relative;
 

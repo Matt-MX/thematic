@@ -4,12 +4,12 @@
   </div>
 </div>
 
-<style>
+<style scoped>
   .main-container {
     position: relative;
     width: 100%;
     min-height: 100vh;
-    height: max-content;
+    height: auto;
 
     display: flex;
     justify-content: center;

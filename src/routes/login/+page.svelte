@@ -32,6 +32,7 @@
           .then((data) => data.json())
           .then((json) => {
             if (json.error) {
+              console.error(json.error)
               // todo
               return;
             }
@@ -57,6 +58,7 @@
       .then((json) => {
         if (json.error) {
           // todo
+          console.error(json.error)
           return;
         }
 
@@ -144,7 +146,7 @@
   </div>
 </Main>
 
-<style>
+<style scoped>
   :global(.main-container) {
     position: absolute;
     top: -2rem;

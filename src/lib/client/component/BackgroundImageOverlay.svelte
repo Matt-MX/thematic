@@ -4,7 +4,7 @@
 
 <img class="bg-image" {src} alt="bg" />
 
-<style>
+<style scoped>
     .bg-image {
         position: fixed;
         width: 100%;

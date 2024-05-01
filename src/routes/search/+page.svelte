@@ -8,15 +8,15 @@
     location.href = "/search?q=" + encodeURIComponent(query);
   };
 
-  export let data: PageData;
+  export let data: any;
 </script>
 
 <Navbar />
 <Main>
   <h1>Search</h1>
-  <SearchBar {search} />
+  <SearchBar {search} query={data.query} />
 
-  <p>{data.results?.length == 0 ? "No" : data.results?.length} results</p>
+  <p>{!data || !data.results || data.results.length == 0 ? "No" : data.results.length} results</p>
 
   {#if data && data.results?.length && data.results.length > 0}
     {#each data.results as result}
@@ -24,13 +24,3 @@
     {/each}
   {/if}
 </Main>
-
-<style>
-  .empty-result {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-  }
-</style>

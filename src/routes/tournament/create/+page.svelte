@@ -5,6 +5,7 @@
   import { goto } from "$app/navigation";
   import Textarea from "$lib/client/component/Textarea.svelte";
   import InputBox from "$lib/client/component/InputBox.svelte";
+  import BackgroundImageOverlay from "$lib/client/component/BackgroundImageOverlay.svelte";
   import { getCachedToken } from "$lib/client/services/account";
   import types from "$lib/types.json";
   import games from "$lib/games.json";
@@ -26,6 +27,8 @@
     type: "",
   };
 
+  let errors: string | undefined = undefined
+
   // todo handle errors
   const submit = () => {
     fetch(`/tournament/create`, {
@@ -39,6 +42,7 @@
       .then((json) => {
         if (json.error) {
           console.error(json.error);
+          errors = json.errors
           return;
         }
         goto(`/tournament/${json}`);
@@ -48,8 +52,14 @@
 
 <Navbar />
 
+<BackgroundImageOverlay src={games[body.game]?.bg || games["cs2"].bg} />
+
 <Main>
   <h1>Create a tournament</h1>
+
+  {#if errors}
+    <p class="errors">{errors}</p>
+  {/if}
 
   <form on:submit={submit}>
     <div class="form-column">
@@ -139,6 +149,10 @@
 </Main>
 
 <style>
+  .errors {
+    color: var(--danger)
+  }
+  
   input[type="datetime-local"] {
     color-scheme: dark;
   }

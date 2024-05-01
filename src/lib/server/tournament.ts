@@ -1,3 +1,4 @@
+import type TournamentInformation from "$lib/schema/TournamentInformation"
 import { db } from "./db"
 
 export const getTournamentInfo = (id: string) =>
@@ -18,8 +19,8 @@ export const createTournament = (accountId: number, body: any) =>
         db.run(
             `
             INSERT INTO tournaments
-            (owner_id, title, game, desc, type, date_start)
-            VALUES(?, ?, ?, ?, ?, datetime(?))
+            (owner_id, title, game, desc, type, date_start, date_end, currentStatus)
+            VALUES(?, ?, ?, ?, ?, datetime(?), ${body.date_end ? "datetime(?)" : "?"}, NULL)
             `,
             [
               accountId,
@@ -27,14 +28,52 @@ export const createTournament = (accountId: number, body: any) =>
               body.game,
               body.desc,
               body.type,
-              body.date_start
+              body.date_start,
+              body.date_end || "NULL"
             ],
             function (err) {
+              console.log(err)
               if (err) {
                 resolve({ error: err})
               } else {
-                resolve({ id: this.lastID})
+                resolve({ id: this.lastID })
               }
             }
           )
     })
+
+export const addTeam = (tournamentId: number, team: string) => 
+  new Promise((resolve, reject) => {
+    db.run(
+      `
+      INSERT INTO teams
+      VALUES(?, ?)
+      `,
+      [tournamentId, team],
+      function (err) {
+        if (err) {
+          resolve({ error: err })
+        } else {
+          resolve({ id: this.lastID })
+        }
+      }
+    )
+  })
+
+export const removeTeam = (tournamentId: number, team: string) =>
+  new Promise((resolve, reject) => {
+    db.run(
+      `
+      DELETE * FROM teams
+      WHERE tournament_id = ? AND team = ?
+      `,
+      [tournamentId, team],
+      function (err) {
+        if (err) {
+          resolve({ error: err })
+        } else {
+          resolve({})
+        }
+      }
+    )
+  })

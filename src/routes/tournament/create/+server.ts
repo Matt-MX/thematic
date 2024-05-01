@@ -2,6 +2,8 @@ import { db, getAccountIDFromToken } from "$lib/server/db";
 import Joi from "joi";
 import type { RequestEvent } from "./$types";
 import { createTournament } from "$lib/server/tournament";
+import types from "$lib/types.json"
+import games from "$lib/games.json"
 
 const tournamentCreationSchema = Joi.object({
   name: Joi.string()
@@ -9,8 +11,8 @@ const tournamentCreationSchema = Joi.object({
     .max(32)
     .required(),
   game: Joi.string()
-    .optional()
-    .max(32),
+    .valid(...Object.keys(games))
+    .required(),
   desc: Joi.string()
     .optional()
     .allow(null, "")
@@ -21,14 +23,14 @@ const tournamentCreationSchema = Joi.object({
     .allow(null, "")
     .optional(),
   type: Joi.string()
-    .valid("single_elim", "double_elim")
+    .valid(...Object.keys(types))
     .required()
 })
 
 export async function POST(req: RequestEvent) {
   const accountId = await getAccountIDFromToken(req.request.headers.get('X-Authorization'))
 
-  if (!accountId) {
+  if (accountId == null || accountId == undefined) {
     return new Response(null, {
       status: 400
     });
@@ -39,6 +41,7 @@ export async function POST(req: RequestEvent) {
 
   const validation = tournamentCreationSchema.validate(body)
   if (validation.error) {
+    console.log()
     return new Response(JSON.stringify(validation.error), {
       status: 400,
       headers: {

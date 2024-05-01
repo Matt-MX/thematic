@@ -4,7 +4,7 @@
 
   export let search = (query: string) => {}
   let inputRef: HTMLElement;
-  let query: string;
+  export let query: string;
 
   onMount(() => {
     inputRef.addEventListener('keydown', (event) => {
@@ -21,7 +21,7 @@
   <SearchIcon />
 </div>
 
-<style>
+<style scoped>
   .search-container {
     display: flex;
     justify-content: start;

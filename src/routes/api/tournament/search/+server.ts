@@ -12,6 +12,7 @@ export async function GET(req: RequestEvent) {
       WHERE (
         title LIKE $q
         OR desc LIKE $q
+        OR game like $q
       )
       ORDER BY date_start ASC
       LIMIT(10)

@@ -26,6 +26,8 @@ export function createTables() {
       desc TEXT,
       type TEXT,
       date_start DATE,
+      date_end DATE DEFAULT NULL,
+      currentStatus TEXT DEFAULT NULL,
       FOREIGN KEY(owner_id) REFERENCES accounts(owner_id)
     );`,
 
@@ -45,7 +47,27 @@ export function createTables() {
       PRIMARY KEY(tournament_id, account_id),
       FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
       FOREIGN KEY(account_id) REFERENCES accounts(id)
-    );`
+    );`,
+    
+    `
+    CREATE TABLE IF NOT EXISTS teams
+    (
+      tournament_id INTEGER,
+      team TEXT,
+      PRIMARY KEY(tournament_id, team),
+      FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
+      CONSTRAINT unique_team UNIQUE(tournament_id, team)
+    )
+    `,
+
+    `
+    CREATE TABLE IF NOT EXISTS brackets
+    (
+      tournament_id INTEGER,
+      json TEXT,
+      PRIMARY KEY(tournament_id),
+      FOREIGN KEY(tournament_id) REFERENCES tournaments(id)
+    )`
   ]
 
   for (const statement of tables) {
@@ -54,8 +76,6 @@ export function createTables() {
       (err) => {
         if (err) {
           console.error(err)
-        } else {
-          console.log("Database initialized");
         }
       }
     );
@@ -171,7 +191,8 @@ export const getTokenFromAccountID = (id: number) =>
         if (err || !result) return reject(err)
 
         const account = result as Account
-        if (account.token) {
+        console.log(result)
+        if (!account.token) {
           setToken(id).then(resolve).catch(reject);
         } else resolve(account.token);
       }

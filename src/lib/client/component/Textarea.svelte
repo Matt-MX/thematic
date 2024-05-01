@@ -34,7 +34,7 @@
 />
 <p class="max-length">{maxLengthText}</p>
 
-<style>
+<style scoped>
     .max-length {
         position: absolute;
         margin-top: -2rem;

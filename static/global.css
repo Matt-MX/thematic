@@ -121,16 +121,17 @@ span.dot {
 }
 
 ::-webkit-scrollbar {
-  width: 7.5px;
+  width: 1rem;
   height: 7.5px;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--text);
+  background: var(--background-alt);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--title);
+  background: var(--highlight);
 }
 
 form {

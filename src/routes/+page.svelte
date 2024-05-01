@@ -17,7 +17,7 @@
 
 <Navbar></Navbar>
 
-<BackgroundImageOverlay src={games["ice_hockey"].bg} />
+<BackgroundImageOverlay src={games["smash_bros_ultimate"].bg} />
 
 <div class="landing">
   <div class="section">
@@ -42,7 +42,7 @@
   </div>
 </div>
 
-<style>
+<style scoped>
 
   .section {
     width: 100%;

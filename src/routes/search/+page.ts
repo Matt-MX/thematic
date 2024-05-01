@@ -8,8 +8,11 @@ export async function load(event: PageLoadEvent) {
             .then((data) => data.json())
             .then((json) => {
                 return {
-                    results: json
+                    results: json,
+                    query: query
                 }
             })
-    } else return null
+    } else return {
+        query: query
+    }
 }

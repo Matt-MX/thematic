@@ -1,8 +1,8 @@
 {
-    "single_elim": {
+    "single_elimination": {
         "label": "Single Elimination"
     },
-    "double_elim": {
+    "double_elimination": {
         "label": "Double Elimination"
     }
 }

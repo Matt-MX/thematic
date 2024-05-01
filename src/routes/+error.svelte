@@ -12,7 +12,7 @@
   </a>
 </Main>
 
-<style>
+<style scoped>
   :global(.main-container) {
     align-items: center;
   }
