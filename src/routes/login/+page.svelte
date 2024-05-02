@@ -25,25 +25,7 @@
         localStorage.setItem("account_id", json);
 
         // todo now login
-        fetch(`/api/account/login`, {
-          method: "POST",
-          body: JSON.stringify(formObject),
-        })
-          .then((data) => data.json())
-          .then((json) => {
-            if (json.error) {
-              console.error(json.error)
-              // todo
-              return;
-            }
-
-            if (json.token && json.account_id) {
-              localStorage.setItem("token", json.token);
-              localStorage.setItem("account_id", json.account_id);
-
-              goto("/");
-            }
-          });
+        login()
       });
   };
 
@@ -66,7 +48,7 @@
           localStorage.setItem("token", json.token);
           localStorage.setItem("account_id", json.account_id);
 
-          goto("/");
+          goto("/account/" + json.account_id);
         }
       });
   };

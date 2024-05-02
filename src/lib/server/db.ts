@@ -31,22 +31,14 @@ export function createTables() {
       FOREIGN KEY(owner_id) REFERENCES accounts(owner_id)
     );`,
 
-    `CREATE TABLE IF NOT EXISTS teams
-    (
-      name TEXT,
-      tournament_id INTEGER,
-      FOREIGN KEY(tournament_id) REFERENCES tournaments(id)
-    );`,
-
     `CREATE TABLE IF NOT EXISTS helpers
     (
       tournament_id INTEGER,
       account_id INTEGER,
-      status TEXT,
-      date DATE,
       PRIMARY KEY(tournament_id, account_id),
       FOREIGN KEY(tournament_id) REFERENCES tournaments(id),
-      FOREIGN KEY(account_id) REFERENCES accounts(id)
+      FOREIGN KEY(account_id) REFERENCES accounts(id),
+      CONSTRAINT unique_helper UNIQUE(tournament_id, team)
     );`,
     
     `

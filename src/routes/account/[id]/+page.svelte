@@ -87,8 +87,8 @@
         {/each}
 
         <!-- Test stuff -->
-        <TournamentPreview info={testData} />
-        <TournamentPreview info={testData1} />
+        <!-- <TournamentPreview info={testData} />
+        <TournamentPreview info={testData1} /> -->
     </div>
 </Main>
 

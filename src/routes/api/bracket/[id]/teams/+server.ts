@@ -1,9 +1,11 @@
+import { getAccountIDFromToken } from "$lib/server/db";
 import { manager, testBracket } from "$lib/server/test";
 import { addTeam, getTournamentInfo, removeTeam } from "$lib/server/tournament";
 import type { RequestEvent } from "./$types";
 
 
 export async function POST(req: RequestEvent) {
+    const accountId = await getAccountIDFromToken(req.request.headers.get("X-Authorization"))
     const id = req.params.id
     const team = req.request.headers.get("team")
 
@@ -13,6 +15,10 @@ export async function POST(req: RequestEvent) {
 
     const info = await getTournamentInfo(id)
     if (!info) return new Response(null, { status: 404 })
+
+    if (info.owner_id != accountId) {
+        return new Response(null, { status: 400 })
+    }
 
     if (!team) {
         return new Response(null, { status: 400 })
@@ -29,6 +35,7 @@ export async function POST(req: RequestEvent) {
 }
 
 export async function DELETE(req: RequestEvent) {
+    const accountId = await getAccountIDFromToken(req.request.headers.get("X-Authorization"))
     const id = req.params.id
     const team = req.request.headers.get("team")
 
@@ -38,6 +45,10 @@ export async function DELETE(req: RequestEvent) {
 
     const info = await getTournamentInfo(id)
     if (!info) return new Response(null, { status: 404 })
+
+    if (!team) {
+        return new Response(null, { status: 400 })
+    }
 
     if (!team) {
         return new Response(null, { status: 400 })

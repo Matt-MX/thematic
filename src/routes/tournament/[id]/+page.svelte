@@ -7,7 +7,10 @@
   import games from "$lib/games.json";
   import types from "$lib/types.json";
   import type GameType from "$lib/schema/GameType";
-  import { getCachedAccountId } from "$lib/client/services/account";
+  import {
+    getCachedAccountId,
+    getCachedToken,
+  } from "$lib/client/services/account";
   import BackgroundImageOverlay from "$lib/client/component/BackgroundImageOverlay.svelte";
   import { page } from "$app/stores";
 
@@ -45,15 +48,16 @@
     fetch(`/api/bracket/${data.id}/teams`, {
       method: "POST",
       headers: {
-        team: team
-      }
+        team: team,
+        "X-Authorization": getCachedToken()!!,
+      },
     }).then((res) => {
       if (res.status == 200) {
         data.teams = [...data.teams, team];
       } else {
-        teamInputErrorMsg = "An error occurred! " + res.status
+        teamInputErrorMsg = "An error occurred! " + res.status;
       }
-    })
+    });
   };
 
   const removeTeam = (team: string) => {
@@ -61,12 +65,13 @@
       method: "DELETE",
       headers: {
         team: team,
+        "X-Authorization": getCachedToken()!!,
       },
     }).then((res) => {
       if (res.status == 200) {
-        data.teams = data.teams.filter((t: any) => t !== team)
+        data.teams = data.teams.filter((t: any) => t !== team);
       } else {
-        teamInputErrorMsg = "An error occurred! " + res.status
+        teamInputErrorMsg = "An error occurred! " + res.status;
       }
     });
   };
@@ -199,20 +204,22 @@
         <h1>Teams</h1>
         <div class="box flex-column">
           {#if !data.currentState}
-            {#if teamInputErrorMsg}
-              <p class="danger">{teamInputErrorMsg}</p>
+            {#if isOwner}
+              {#if teamInputErrorMsg}
+                <p class="danger">{teamInputErrorMsg}</p>
+              {/if}
+              <form on:submit={addTeamMember} class="flex-row">
+                <input
+                  bind:this={teamInputRef}
+                  id="team"
+                  type="text"
+                  class="box"
+                  style="padding: 0.5rem 1rem"
+                  required
+                />
+                <button type="submit" class="box confirm">Add Team</button>
+              </form>
             {/if}
-            <form on:submit={addTeamMember} class="flex-row">
-              <input
-                bind:this={teamInputRef}
-                id="team"
-                type="text"
-                class="box"
-                style="padding: 0.5rem 1rem"
-                required
-              />
-              <button type="submit" class="box confirm">Add Team</button>
-            </form>
           {:else}
             <p>The tournament has started, no more teams can be added.</p>
           {/if}
@@ -220,7 +227,7 @@
           {#each data.teams as team}
             <div class="team flex-row">
               <p>{team}</p>
-              {#if !data.currentState}
+              {#if !data.currentState && isOwner}
                 <button class="danger" on:click={() => removeTeam(team)}
                   >Remove</button
                 >

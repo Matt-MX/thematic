@@ -25,9 +25,9 @@ export const createBracket = (tournamentId: number, type: StageType, seeding: st
 export let testBracket: any
 
 (async function() {
-    const players = ["MattMX", "Gabby", "John"]
+    const players = ["MattMX", "Gabby", "John", "Chris", "Mohammed"]
 
-    testBracket = await createBracket(-1, "single_elimination", players)
+    testBracket = await createBracket(0, "double_elimination", players)
 }());
 
 function powerOfTwo(x: number) {
