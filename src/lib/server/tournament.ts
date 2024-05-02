@@ -2,14 +2,16 @@ import type TournamentInformation from "$lib/schema/TournamentInformation"
 import { db } from "./db"
 
 export const getTournamentInfo = (id: string) =>
-    new Promise<any>((resolve, reject) => {
+    new Promise<TournamentInformation>((resolve, reject) => {
         db.get(
             `
-            SELECT * FROM tournaments WHERE id = ?
+            SELECT * 
+            FROM tournaments 
+            WHERE id = ?
             `,
             [id],
             (err, result) => {
-              resolve(result)
+              resolve(result as TournamentInformation)
             }
         )
     })
@@ -64,7 +66,7 @@ export const removeTeam = (tournamentId: number, team: string) =>
   new Promise((resolve, reject) => {
     db.run(
       `
-      DELETE * FROM teams
+      DELETE FROM teams
       WHERE tournament_id = ? AND team = ?
       `,
       [tournamentId, team],
@@ -73,6 +75,25 @@ export const removeTeam = (tournamentId: number, team: string) =>
           resolve({ error: err })
         } else {
           resolve({})
+        }
+      }
+    )
+  })
+
+export const getTeams = (tournamentId: number) =>
+  new Promise((resolve, reject) => {
+    db.all(
+      `
+      SELECT team
+      FROM teams
+      WHERE tournament_id = ?
+      `,
+      [tournamentId],
+      function (err, rows) {
+        if (err) {
+          resolve({ error: err })
+        } else {
+          resolve(rows.map((row: any) => row.team))
         }
       }
     )

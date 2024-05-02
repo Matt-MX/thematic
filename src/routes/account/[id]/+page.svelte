@@ -5,6 +5,8 @@
     import TournamentPreview from "$lib/client/component/TournamentPreview.svelte";
     import type { PageData } from "./$types";
     import type TournamentInformation from "$lib/schema/TournamentInformation";
+    import { onMount } from "svelte";
+    import { getCachedAccountId, getCachedToken } from "$lib/client/services/account"
 
     export let data: PageData;
 
@@ -30,6 +32,32 @@
         date_start: new Date(),
         game: "cs2",
     } as TournamentInformation;
+
+    let isAccountOwner: boolean
+
+    onMount(() => {
+        isAccountOwner = getCachedAccountId() == data.id
+    })
+
+    const logout = () => {
+        fetch("/api/account/logout", {
+            headers: {
+                "X-Authorization": getCachedToken() || ""
+            }
+        }).then((data) => data.json())
+        .then((json) => {
+            if (json.error) {
+                // todo feedback error
+                console.error(json.error)
+                return
+            }
+
+            localStorage.removeItem("account_id")
+            localStorage.removeItem("token")
+            location.reload()
+        })
+    }
+
 </script>
 
 <Navbar />
@@ -45,6 +73,9 @@
             <h1 class="username">{data.username}</h1>
             <p>Created <span>{data.created || "(date)"}</span></p>
             <p>Followers <span>{data.followers || "(number)"}</span></p>
+            {#if isAccountOwner}
+                <button id="logout-button" class="danger" on:click={logout}>Logout</button>
+            {/if}
         </div>
     </div>
 
@@ -91,5 +122,9 @@
         flex: 0;
         flex-basis: 45%;
         flex-grow: 1;
+    }
+
+    #logout-button {
+        margin-top: 0.5rem;
     }
 </style>
